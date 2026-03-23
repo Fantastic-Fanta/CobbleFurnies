@@ -2,12 +2,8 @@ package com.lunazstudios.cobblefurnies.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -49,28 +45,8 @@ public class PokeChairBlock extends SeatBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
-    public float seatHeight(BlockState state) {
-        return 0.5F;
-    }
-
-    @Override
-    public BlockPos primaryDismountLocation(Level level, BlockState state, BlockPos pos) {
-        return pos.relative(state.getValue(FACING));
-    }
-
-    @Override
-    public float setRiderRotation(BlockState state, Entity entity) {
-        return state.getValue(FACING).toYRot();
-    }
-
-    @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Nullable

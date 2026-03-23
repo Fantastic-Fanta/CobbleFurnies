@@ -7,7 +7,6 @@ import com.lunazstudios.cobblefurnies.util.block.ShapeUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,13 +23,13 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public class CurtainBlock extends HorizontalDirectionalBlock {
 
@@ -193,61 +192,10 @@ public class CurtainBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
-
-        if (state.getValue(VERTICAL) == CurtainVerticalPart.BOTTOM) {
-            toggleCurtain(level, pos.above(), state.getValue(FACING));
-        } else {
-            toggleCurtain(level, pos, state.getValue(FACING));
-        }
-
-        return InteractionResult.CONSUME;
-    }
-
-    @Override
     protected List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
         if (blockState.getValue(VERTICAL) == CurtainVerticalPart.TOP) {
             return Collections.emptyList();
         }
         return super.getDrops(blockState, builder);
-    }
-
-    private void toggleCurtain(Level level, BlockPos origin, Direction facing) {
-        Set<BlockPos> visited = new HashSet<>();
-        Queue<BlockPos> queue = new LinkedList<>();
-        queue.add(origin);
-
-        BlockState originState = level.getBlockState(origin);
-        boolean targetOpen = !originState.getValue(OPEN);
-
-        while (!queue.isEmpty()) {
-            BlockPos pos = queue.poll();
-            if (!visited.add(pos)) continue;
-
-            BlockState state = level.getBlockState(pos);
-            if (!(state.getBlock() instanceof CurtainBlock) || state.getValue(FACING) != facing) continue;
-
-            if (state.getValue(OPEN) != targetOpen) {
-                level.setBlock(pos, state.setValue(OPEN, targetOpen), 3);
-            }
-
-            Direction verticalDir = state.getValue(VERTICAL) == CurtainVerticalPart.TOP ? Direction.DOWN : Direction.UP;
-            BlockPos verticalPos = pos.relative(verticalDir);
-            BlockState verticalState = level.getBlockState(verticalPos);
-            if (verticalState.getBlock() == this && verticalState.getValue(FACING) == facing) {
-                queue.add(verticalPos);
-            }
-
-            for (Direction side : List.of(facing.getClockWise(), facing.getCounterClockWise())) {
-                BlockPos sidePos = pos.relative(side);
-                BlockState sideState = level.getBlockState(sidePos);
-                if (sideState.getBlock() == this &&
-                        sideState.getValue(FACING) == facing &&
-                        sideState.getValue(VERTICAL) == state.getValue(VERTICAL)) {
-                    queue.add(sidePos);
-                }
-            }
-        }
     }
 }

@@ -5,9 +5,9 @@
 	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
-		"broth": "cobblemon:block/campfire_pot/campfire_pot_broth",
-		"particle": "cobblemon:block/campfire_pot/campfire_pot_red",
-		"pot": "cobblemon:block/campfire_pot/campfire_pot_red"
+		"broth": "minecraft:block/iron_block",
+		"particle": "minecraft:block/iron_block",
+		"pot": "minecraft:block/iron_block"
 	},
 	"elements": [
 		{

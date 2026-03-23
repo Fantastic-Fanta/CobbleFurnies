@@ -39,9 +39,9 @@ public class CFBlocks {
     public static final Supplier<Block> DARK_TOILET = registerBlock("dark_toilet", () -> new ToiletBlock(Properties.MARBLE));
 
     public static final Supplier<Block> LIGHT_FREEZER = registerBlockOnly("light_freezer", () -> new FreezerBlock(Properties.CONCRETE));
-    public static final Supplier<Block> LIGHT_FRIDGE = registerBlock("light_fridge", () -> new FridgeBlock(Properties.CONCRETE, CFBlocks.LIGHT_FREEZER.get()));
+    public static final Supplier<Block> LIGHT_FRIDGE = registerBlock("light_fridge", () -> new LightFridgeBlock(Properties.CONCRETE));
     public static final Supplier<Block> DARK_FREEZER = registerBlockOnly("dark_freezer", () -> new FreezerBlock(Properties.CONCRETE));
-    public static final Supplier<Block> DARK_FRIDGE = registerBlock("dark_fridge", () -> new FridgeBlock(Properties.CONCRETE, CFBlocks.DARK_FREEZER.get()));
+    public static final Supplier<Block> DARK_FRIDGE = registerBlock("dark_fridge", () -> new DarkFridgeBlock(Properties.CONCRETE));
 
     public static final Supplier<Block> FURNI_CRAFTER = registerBlock("furnicrafter", () -> new FurniCrafterBlock(Properties.CONCRETE));
 

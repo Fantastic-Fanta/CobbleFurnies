@@ -1,14 +1,9 @@
 package com.lunazstudios.cobblefurnies.fabric.client;
 
-import com.cobblemon.mod.common.CobblemonMenuType;
 import com.lunazstudios.cobblefurnies.client.CobbleFurniesClient;
-import com.lunazstudios.cobblefurnies.client.screen.FurniCrafterScreen;
-import com.lunazstudios.cobblefurnies.client.screen.StoveScreen;
 import com.lunazstudios.cobblefurnies.registry.CFBlocks;
-import com.lunazstudios.cobblefurnies.registry.CFMenus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 
 public final class CobbleFurniesFabricClient implements ClientModInitializer {
@@ -16,12 +11,9 @@ public final class CobbleFurniesFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         CobbleFurniesClient.init();
 
-        MenuScreens.register(CFMenus.FURNI_CRAFTER_MENU.get(), FurniCrafterScreen::new);
-        MenuScreens.register(CFMenus.STOVE_MENU.get(), StoveScreen::new);
-
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(),
                 CFBlocks.LIGHT_TOILET.get(), CFBlocks.DARK_TOILET.get()
-                );
+        );
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(),
                 CFBlocks.MINI_TOPIARY.get(), CFBlocks.POTTED_POTHOS.get(),
@@ -56,7 +48,8 @@ public final class CobbleFurniesFabricClient implements ClientModInitializer {
                 CFBlocks.MAGENTA_STOVE.get(), CFBlocks.PURPLE_STOVE.get(), CFBlocks.PINK_STOVE.get(), CFBlocks.WHITE_STOVE.get(),
                 CFBlocks.LIGHT_GRAY_STOVE.get(), CFBlocks.GRAY_STOVE.get(), CFBlocks.BLACK_STOVE.get(), CFBlocks.BROWN_STOVE.get(),
 
-                CFBlocks.TV.get(), CFBlocks.CES.get(), CFBlocks.LIGHT_FRIDGE.get(), CFBlocks.LIGHT_FREEZER.get(), CFBlocks.DARK_FREEZER.get()
-                );
+                CFBlocks.TV.get(), CFBlocks.CES.get(), CFBlocks.LIGHT_FRIDGE.get(), CFBlocks.DARK_FRIDGE.get(),
+                CFBlocks.LIGHT_FREEZER.get(), CFBlocks.DARK_FREEZER.get()
+        );
     }
 }

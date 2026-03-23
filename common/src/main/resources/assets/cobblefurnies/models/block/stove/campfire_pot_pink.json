@@ -4,8 +4,8 @@
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {
-		"particle": "cobblemon:block/campfire_pot/campfire_pot_pink",
-		"pot": "cobblemon:block/campfire_pot/campfire_pot_pink"
+		"particle": "minecraft:block/iron_block",
+		"pot": "minecraft:block/iron_block"
 	},
 	"elements": [
 		{

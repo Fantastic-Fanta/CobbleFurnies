@@ -1,16 +1,10 @@
 package com.lunazstudios.cobblefurnies.block;
 
-import com.lunazstudios.cobblefurnies.entity.SeatEntity;
-import com.lunazstudios.cobblefurnies.registry.CFRegistry;
 import com.lunazstudios.cobblefurnies.util.block.ShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -23,24 +17,16 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-/**
- * Original Author: StarfishStudios
- * Project: Another Furniture
- */
 public class ToiletBlock extends SeatBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
-    // Closed state voxel shapes
     protected static final VoxelShape SHAPE_NORTH = Shapes.or(
             Block.box(2, 9, 10, 14, 18, 16),
             Block.box(11, 6, 0, 13, 9, 11),
@@ -57,7 +43,6 @@ public class ToiletBlock extends SeatBlock implements SimpleWaterloggedBlock {
     protected static final VoxelShape SHAPE_SOUTH = ShapeUtil.rotateShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_WEST = ShapeUtil.rotateShape(SHAPE_NORTH, Direction.WEST);
 
-    // Open state voxel shapes (you can adjust the boxes as desired)
     protected static final VoxelShape SHAPE_OPEN_NORTH = Shapes.or(
             Block.box(2, 9, 10, 14, 18, 16),
             Block.box(11, 6, 0, 13, 9, 11),
@@ -67,7 +52,6 @@ public class ToiletBlock extends SeatBlock implements SimpleWaterloggedBlock {
             Block.box(4, 0, 2, 12, 6, 10),
             Block.box(5, 0, 10, 11, 9, 15),
             Block.box(5, 6.5, 2, 11, 6.5, 8),
-            // Note: The difference in the open state is that one of the boxes has changed:
             Block.box(3, 9, 0, 13, 10, 10),
             Block.box(14, 16, 11, 15, 17, 14)
     );
@@ -91,59 +75,9 @@ public class ToiletBlock extends SeatBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public float seatHeight(BlockState state) {
-        return 0.45F;
-    }
-
-    @Override
-    public BlockPos primaryDismountLocation(Level level, BlockState state, BlockPos pos) {
-        return pos.relative(state.getValue(FACING));
-    }
-
-    @Override
-    public float setRiderRotation(BlockState state, Entity entity) {
-        return state.getValue(FACING).toYRot();
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         int index = state.getValue(FACING).get2DDataValue();
         return state.getValue(OPEN) ? OPEN_SHAPES[index] : CLOSED_SHAPES[index];
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (CFRegistry.isFakePlayer(player)) return InteractionResult.PASS;
-        if (!level.mayInteract(player, pos)) return InteractionResult.PASS;
-
-        boolean open = state.getValue(OPEN);
-
-        if (!open) {
-            if (!player.isCrouching()) {
-                return InteractionResult.PASS;
-            } else {
-                level.setBlock(pos, state.setValue(OPEN, true), 3);
-                return InteractionResult.SUCCESS;
-            }
-        }
-        else {
-            if (player.isCrouching()) {
-                level.setBlock(pos, state.setValue(OPEN, false), 3);
-                return InteractionResult.SUCCESS;
-            }
-            if (!isSittable(state) || player.isPassenger()) return InteractionResult.PASS;
-            if (isSeatBlocked(level, pos)) return InteractionResult.PASS;
-            if (isSeatOccupied(level, pos)) {
-                List<SeatEntity> seats = level.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
-                if (!seats.isEmpty() && ejectSeatedExceptPlayer(level, seats.get(0))) {
-                    return InteractionResult.SUCCESS;
-                }
-                return InteractionResult.PASS;
-            }
-            if (level.isClientSide) return InteractionResult.SUCCESS;
-            sitDown(level, pos, getLeashed(player).orElse(player));
-            return InteractionResult.SUCCESS;
-        }
     }
 
     @Nullable

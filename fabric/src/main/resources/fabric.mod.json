@@ -20,23 +20,13 @@
     ],
     "client": [
       "com.lunazstudios.cobblefurnies.fabric.client.CobbleFurniesFabricClient"
-    ],
-    "rei_client": [
-      "com.lunazstudios.cobblefurnies.fabric.compat.CobbleFurniesREIClient"
-    ],
-    "jei_mod_plugin": [
-      "com.lunazstudios.cobblefurnies.compat.JEICobbleFurniesPlugin"
     ]
   },
-  "mixins": [
-    "cobblefurnies.mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.16.14",
     "minecraft": "~1.21.1",
     "java": ">=21",
     "athena": ">=4.0.2",
-    "cobblemon": ">=1.7.1",
     "architectury": ">=13.0.8",
     "fabric-api": "*"
   },

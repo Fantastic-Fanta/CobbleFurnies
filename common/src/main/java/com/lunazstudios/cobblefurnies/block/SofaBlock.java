@@ -5,7 +5,6 @@ import com.lunazstudios.cobblefurnies.block.properties.SofaType;
 import com.lunazstudios.cobblefurnies.util.block.ShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -128,35 +127,6 @@ public class SofaBlock extends SeatBlock implements SimpleWaterloggedBlock {
         registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, false));
-    }
-
-    @Override
-    public float seatHeight(BlockState state) {
-        return 0.35F;
-    }
-
-    @Override
-    public BlockPos primaryDismountLocation(Level level, BlockState state, BlockPos pos) {
-        Direction facing = state.getValue(FACING);
-        BlockState stateRelative = level.getBlockState(pos.relative(facing));
-
-        if (stateRelative.getBlock() instanceof SofaBlock) {
-            Direction facingRelative = stateRelative.getValue(FACING);
-            if (facing != facingRelative) {
-                return pos.relative(facing).relative(facingRelative);
-            }
-        }
-        return pos.relative(facing);
-    }
-
-    @Override
-    public float setRiderRotation(BlockState state, Entity entity) {
-        float corner = switch (state.getValue(TYPE)) {
-            case INNER_LEFT, OUTER_LEFT -> -45.0F;
-            case INNER_RIGHT, OUTER_RIGHT -> 45.0F;
-            default -> 0.0F;
-        };
-        return state.getValue(FACING).toYRot() + corner;
     }
 
     @Override
